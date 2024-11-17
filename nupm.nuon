@@ -1,0 +1,12 @@
+{
+    name: "pit"
+    version: 0.1.0
+    description: "A collection of Nushell tools to manage stuff."
+    documentation: "https://github.com/arnau/pit/blob/main/README.md"
+    maintainers: [@arnau]
+    dependencies: {
+        nushell: 0.99.0
+        sqlite3: 3.47.0
+    }
+    type: "module"
+}
