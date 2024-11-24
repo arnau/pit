@@ -1,5 +1,9 @@
 use markdown.nu *
 
+# avoids clashing names
+alias open-file = open
+
+
 export def "open" [] {
     # sqlite3 :memory: "ATTACH './lab/applebooks_library.sqlite' AS library; ATTACH './lab/applebooks_annotations.sqlite' AS annotations;"
 
@@ -17,7 +21,7 @@ export def "pull" [] {
 export def "list" [] {
     ls books/*.md
     | each {|row|
-          open $row.name
+          open-file $row.name
           | from markdown
           | insert filename { $row.name }
       }
