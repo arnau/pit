@@ -30,6 +30,41 @@ export use books.nu
 export use markdown.nu *
 
 
+# Search across the trail and bulletin main text fields. It forces a case-insensitive search.
+#
+# Usage: search foo
+export def search [term: string, --short (-s)]: string -> list<any> {
+    let trail_results = trail search $term | into value
+    let bulletin_results = bulletin search $term
+        | reject year
+
+    let results = $trail_results
+        | join -l $bulletin_results url
+        | reject year id
+        | move publication_date --after date
+        | upsert date {|row|
+              if ($row.date | is-empty) { $row.publication_date } else { $row.date } 
+          }
+        | upsert title {|row|
+              if ($row.title | is-empty) { $row.title_ } else { $row.title } 
+          }
+        | upsert summary {|row|
+              if ($row.summary | is-empty) { $row.summary_ } else { $row.summary } 
+          }
+        | insert is_published {|row|
+              $row.publication_date | is-not-empty 
+          }
+        | reject title_ summary_ publication_date
+
+    if ($short) {
+        $results
+        | select date title url is_published
+    } else {
+        $results
+    }
+}
+
+
 
 # Lists old resource collection
 export def "resource list" [] {
