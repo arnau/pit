@@ -71,7 +71,7 @@ export def list [] {
     glob data/bulletins/*.jsonl
     | from jsonl
     | update publication_date { into datetime }
-    | insert year { |row| $row.publication_date | date to-record | get year }
+    | insert year { |row| $row.publication_date | into record | get year }
 }
 
 

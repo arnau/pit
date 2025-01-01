@@ -27,7 +27,8 @@ export def new [] {
 # Usage: trail list
 export def list [] {
     open data/trail/*.csv
-    | insert year { |row| $row.date | date to-record | get year }
+    | update date { into datetime }
+    | insert year {|row| $row.date | into record | get year }
     | update tags { from json }
 }
 
