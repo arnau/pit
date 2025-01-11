@@ -42,20 +42,16 @@ export def search [term: string, --short (-s)]: string -> list<any> {
 
     let results = $trail_results
         | join -l $bulletin_results url
-        | move publication_date --after date
         | upsert date {|row|
               if ($row.date | is-empty) { $row.publication_date } else { $row.date } 
           }
         | upsert title {|row|
               if ($row.title | is-empty) { $row.title_ } else { $row.title } 
           }
-        | upsert summary {|row|
-              if ($row.summary | is-empty) { $row.summary_ } else { $row.summary } 
-          }
         | insert is_published {|row|
               $row.publication_date | is-not-empty 
           }
-        | reject title_ summary_ publication_date
+        | reject publication_date?
 
     if ($short) {
         $results
