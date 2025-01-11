@@ -34,13 +34,14 @@ export use markdown.nu *
 #
 # Usage: search foo
 export def search [term: string, --short (-s)]: string -> list<any> {
-    let trail_results = trail search $term | into value
-    let bulletin_results = bulletin search $term
+    let trail_results = trail search $term
         | reject year
+        | into value
+    let bulletin_results = bulletin search $term
+        | select url publication_date content_type
 
     let results = $trail_results
         | join -l $bulletin_results url
-        | reject year id
         | move publication_date --after date
         | upsert date {|row|
               if ($row.date | is-empty) { $row.publication_date } else { $row.date } 
