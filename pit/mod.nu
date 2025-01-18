@@ -43,13 +43,13 @@ export def search [term: string, --short (-s)]: string -> list<any> {
     let results = $trail_results
         | join -l $bulletin_results url
         | upsert date {|row|
-              if ($row.date | is-empty) { $row.publication_date } else { $row.date } 
+              if ($row.date? | is-empty) { $row.publication_date? } else { $row.date } 
           }
         | upsert title {|row|
-              if ($row.title | is-empty) { $row.title_ } else { $row.title } 
+              if ($row.title? | is-empty) { $row.title_ } else { $row.title } 
           }
         | insert is_published {|row|
-              $row.publication_date | is-not-empty 
+              $row.publication_date? | is-not-empty 
           }
         | reject publication_date?
 
