@@ -138,7 +138,7 @@ export def excerpt [] {
 # Search across the bulletin main text fields. It forces a case-insensitive search.
 #
 # Usage: bulletin search
-export def search [term: string]: string -> list<any> {
+export def search [term: string]: nothing -> list<any> {
     let search_term = $"\(?i\)($term)"
 
     list

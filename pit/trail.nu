@@ -58,7 +58,7 @@ export def crates [] {
 # Search across the trail main text fields. It forces a case-insensitive search.
 #
 # Usage: trail search
-export def search [term: string]: string -> list<any> {
+export def search [term: string]: nothing -> list<any> {
     let search_term = $"\(?i\)($term)"
 
     list

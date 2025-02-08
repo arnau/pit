@@ -33,7 +33,7 @@ export use markdown.nu *
 # Search across the trail and bulletin main text fields. It forces a case-insensitive search.
 #
 # Usage: search foo
-export def search [term: string, --short (-s)]: string -> list<any> {
+export def search [term: string, --short (-s)]: nothing -> list<any> {
     let trail_results = trail search $term
         | reject year
         | into value
