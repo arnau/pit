@@ -34,3 +34,20 @@ export def "tfl list" [] {
     | move duration --after end_date
     | sort-by start_date duration
 }
+
+export def "tfl month-activity" [filter: datetime] {
+    let date = $filter | into record
+
+    tfl list
+    | insert weeknum { get start_date | date to-weeknumber }
+    | insert month { get start_date | into record | select year month day }
+    | flatten
+    | where year == $date.year and month == $date.month
+    | group-by --to-table day
+}
+
+export def "tfl week-activity" [filter: int] {
+    tfl list
+    | insert weeknum { get start_date | date to-weeknumber }
+    | where weeknum == $filter
+}
