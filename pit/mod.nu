@@ -60,6 +60,7 @@ export def search [term: string, --short (-s)]: nothing -> list<any> {
         $results
     }
 }
+export alias s = search --short
 
 
 
