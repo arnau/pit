@@ -1,3 +1,5 @@
+use ./stash.nu
+
 # avoids clashing names
 alias save-file = save
 
@@ -33,7 +35,7 @@ export def list [] {
 }
 
 # Appends the given entry to the trail.
-export def save [] {
+export def save [--stash (-s), --content-type (-t): string@"stash content-types"] {
     let input = $in
     let stamp = $input.date | parse "{year}-{month}-{day}"
 
@@ -46,6 +48,12 @@ export def save [] {
     | select date url title summary tags source
     | to csv -n
     | save-file -a $"data/trail/($stamp.year.0).csv"
+
+    if ($stash) {
+        $input
+        | stash add --content-type $content_type
+        | stash save
+    }
 }
 
 export def crates [] {

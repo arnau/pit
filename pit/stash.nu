@@ -22,10 +22,7 @@ export def drop [] {
 
     list
     | get entries
-    | filter { |e|
-          $input
-          | all { |x| $x != $e }
-      }
+    | where { |e| $input | all { |x| $x != $e } }
 }
 
 # Wipes out the bulletin stash entries.
@@ -36,7 +33,7 @@ export def flush [] {
 }
 
 # The list of possible content types for a bulletin entry.
-def content-types [] { ["text" "pdf" "video" ] }
+export def content-types [] { ["text" "pdf" "video" ] }
 
 # Transforms a trail entry into a bulletin entry
 def "into bulletin" [] {
@@ -58,19 +55,24 @@ def "into bulletin" [] {
 # ```
 # $entry | stash add | stash save
 # ```
-export def add [] {
+export def add [--content-type (-t): string@content-types] {
+    mut type = $content_type
     let input = $in
-        let content_type = (content-types | input list --fuzzy "content_type: ")
+        if ($type == null) {
+            $type = (content-types | input list --fuzzy "content_type: ")      
 
-        if ($content_type == null) {
-            error make {msg: "aborted"}
-        } else {
-            list
-            | update entries {
-                  $in
-                  | append ($input | insert content_type $content_type | into bulletin)
-              }
-       }
+            if ($type == null) {
+                error make {msg: "aborted"}
+            }
+        }
+
+
+        list
+        | update entries {
+              $in
+              | append ($input | insert content_type $content_type | into bulletin)
+          }
+
 }
 
 # Lists the list of stashed entries.
