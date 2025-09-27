@@ -35,7 +35,7 @@ export def list [] {
 }
 
 # Appends the given entry to the trail.
-export def save [--stash (-s), --content-type (-t): string@"stash content-types"] {
+export def save [--stash (-s), --content-type (-t): string@"stash content-types" = "text"] {
     let input = $in
     let stamp = $input.date | parse "{year}-{month}-{day}"
 

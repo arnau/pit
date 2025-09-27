@@ -58,20 +58,17 @@ def "into bulletin" [] {
 export def add [--content-type (-t): string@content-types] {
     mut type = $content_type
     let input = $in
-        if ($type == null) {
-            $type = (content-types | input list --fuzzy "content_type: ")      
 
-            if ($type == null) {
-                error make {msg: "aborted"}
-            }
-        }
+    if ($type == null) {
+        error make {msg: "aborted"}
+    }
 
 
-        list
-        | update entries {
-              $in
-              | append ($input | insert content_type $content_type | into bulletin)
-          }
+    list
+    | update entries {
+          $in
+          | append ($input | insert content_type $content_type | into bulletin)
+      }
 
 }
 
