@@ -6,6 +6,41 @@ def "compose datetime" [
 }
 
 
+def to-weeknumber [] {
+    $in | format date "%V" | into int
+}
+
+# Convert text or datetime into weeknumber.
+def "date to-weeknumber" [
+    --format (-f): string # Specify expected format of INPUT string to parse datetime
+]: [string -> int, datetime -> int, list<string> -> list<int>, int -> int, list<int> -> list<int>] {
+    let input = $in
+
+    match ($input | describe) {
+        "string" | "list<string>" => {
+            $input | into datetime | to-weeknumber
+        },
+        "int" | "list<int>" => {
+            $input | into datetime | to-weeknumber
+        },
+        "datetime" => {
+            $input | to-weeknumber
+        },
+    }
+}
+
+# Like `$date | into record` but with weeknumber added.
+export def "date split" [] {
+    let input = $in
+
+    $input
+    | into record
+    | insert week { $input | date to-weeknumber }
+}
+
+
+
+
 # Lists the journey expenses from TFL.
 export def "tfl list" [] {
     let column_mapping = {
@@ -46,8 +81,8 @@ export def "tfl month-activity" [filter: datetime] {
     | group-by --to-table day
 }
 
-export def "tfl week-activity" [filter: int] {
+export def "tfl week-activity" [filter: string] {
     tfl list
-    | insert weeknum { get start_date | date to-weeknumber }
-    | where weeknum == $filter
+    | insert week { get start_date | format date "%Y-W%V" }
+    | where week == $filter
 }
