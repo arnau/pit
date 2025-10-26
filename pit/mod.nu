@@ -36,7 +36,7 @@ export use markdown.nu *
 export def search [term: string, --short (-s)]: nothing -> list<any> {
     let trail_results = trail search $term
         | reject year
-        | into value
+        | update cells {detect type}
     let bulletin_results = bulletin search $term
         | select url publication_date content_type
 
