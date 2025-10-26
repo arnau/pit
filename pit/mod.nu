@@ -38,7 +38,7 @@ export def search [term: string, --short (-s)]: nothing -> list<any> {
         | reject year
         | update cells {detect type}
     let bulletin_results = bulletin search $term
-        | select url publication_date content_type
+        | select url title publication_date content_type
 
     let results = $trail_results
         | join -l $bulletin_results url
