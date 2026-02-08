@@ -28,7 +28,7 @@ export def new [
     let stamp = if ($date | is-not-empty) { $date } else { date now }
     let week = $stamp | format date "%G-W%V"
     let publication_date = $stamp | format date "%Y-%m-%d"
-    let entries = (stash list | get entries | input list --multi)
+    let entries = (stash list | get entries | input list --multi --display title)
 
     print $entries
     
